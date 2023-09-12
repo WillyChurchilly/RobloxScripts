@@ -1,0 +1,109 @@
+-- Creating The Folder
+local ColorChangeFolder = Instance.new("Folder")
+ColorChangeFolder.Parent = workspace
+ColorChangeFolder.Name = "ColorChangeScript"
+
+
+-- Color Variables
+local Blue = Color3.fromRGB(81, 0, 255)
+local Green = Color3.fromRGB(0, 255, 0)
+local Red = Color3.fromRGB(255, 0, 4)
+local Yellow = Color3.fromRGB(255, 255, 0)
+
+-- Materials
+local Neon = Enum.Material.Neon
+local Metal = Enum.Material.Metal
+
+-- Sound Variable
+local Click = workspace.Sounds.Click
+local Beep = workspace.Sounds.beep
+
+-- Wall Block 
+local ColorWall = Instance.new("Part")
+ColorWall.Name = "ColorWall"
+ColorWall.Parent = ColorChangeFolder
+ColorWall.Anchored = true
+ColorWall.Size = Vector3.new(14, 12.2, 1)
+ColorWall.Position = Vector3.new(2, 6.1, 28.5)
+
+-- Button to change Wall Color
+local Button = Instance.new("Part")
+Button.Name = "Button"
+Button.Parent = ColorChangeFolder
+Button.Anchored = true
+Button.Size = Vector3.new(2, 1.2, 2)
+Button.Position = Vector3.new(2, 0.6, 25)
+
+-- Dumbstuff
+local VineBoom = workspace.Sounds["vine boom"]
+
+-- Proximity Prompt
+local ProximityPromptService = Instance.new("ProximityPrompt")
+ProximityPromptService.Parent = Button
+ProximityPromptService.ActionText = "Change Color"
+ProximityPromptService.HoldDuration = 0.268
+
+--Color Change Functions
+local function ColorChange()
+	if ProximityPromptService.PromptButtonHoldBegan then
+		Click:Play()
+		ColorWall.Color = Red
+		ColorWall.Material = Neon
+		if ProximityPromptService.PromptButtonHoldBegan and ColorWall.Color == Red then
+			wait(2.5)
+			Beep:Play()
+			ColorWall.Color = Blue
+			
+			if ProximityPromptService.PromptButtonHoldBegan and ColorWall.Color == Blue then
+				wait(2.5)
+				Beep:Play()
+				ColorWall.Color = Green
+				
+				if ProximityPromptService.PromptButtonHoldBegan and ColorWall.Color == Green then
+					wait(2.5)
+					Beep:Play()
+					ColorWall.Color = Yellow
+				end
+			end
+		end
+	end
+end
+ProximityPromptService.PromptButtonHoldBegan:Connect(ColorChange)
+
+-- Things that happen when the colors appear
+local function colorEffects(otherPart)
+	local character = otherPart.Parent
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	
+	if humanoid and ColorWall.Color == Red then
+		print("You touched Red!")
+		humanoid.Health = 0
+	end
+	
+	if humanoid and ColorWall.Color == Blue then
+		print("You touched blue!")
+		humanoid.WalkSpeed = 90
+		wait(10)
+		humanoid.Health = 16
+	end
+	
+	if humanoid and ColorWall.Color == Green then
+		print("You touched green!")
+		humanoid.JumpHeight = 90
+	end
+	
+	if humanoid and ColorWall.color == Yellow then
+		ProximityPromptService.ActionText = "Yellow In Development"
+		ProximityPromptService.ClickablePrompt = false
+		wait(2.5)
+		ProximityPromptService.ClickablePrompt = true
+		ProximityPromptService.ActionText = "Change Color"
+	
+	end
+end
+ColorWall.Touched:Connect(colorEffects)
+
+
+while ColorWall.Color == Red do
+	VineBoom:Play()
+end
