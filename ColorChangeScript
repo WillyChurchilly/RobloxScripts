@@ -90,6 +90,8 @@ local function colorEffects(otherPart)
 	if humanoid and ColorWall.Color == Green then
 		print("You touched green!")
 		humanoid.JumpHeight = 90
+		wait(2.0)
+		humanoid.JumpHeight = 10
 	end
 	
 	if humanoid and ColorWall.color == Yellow then
@@ -107,3 +109,4 @@ ColorWall.Touched:Connect(colorEffects)
 while ColorWall.Color == Red do
 	VineBoom:Play()
 end
+
