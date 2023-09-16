@@ -1,0 +1,99 @@
+-- Parts
+local Button = script.Parent
+local MiddlePart = workspace.Folder["Middle Wall"]
+local RightWall = workspace.Folder.RightWall
+local LeftWall = workspace.Folder.LeftWall
+
+-- Camera (CHANGE THIS IF U WANNA MAKE IT GO 1ST PERSON MODE) (
+local Camera = workspace.CurrentCamera
+
+-- BASEPLATE
+local Baseplate = workspace.Baseplate
+
+-- MATERIALS
+local Neon = Enum.Material.Neon
+
+-- COLORS
+local Red = Color3.fromRGB(255, 45, 0)
+local Black = Color3.fromRGB(0, 0, 0)
+local NormalColor = Color3.fromRGB(163, 162, 165)
+local BaseplateColor = Color3.fromRGB(91, 91, 91)
+
+-- Top Wall
+local TopWall = workspace.Folder["Top Wall"]
+TopWall.Transparency = 1
+TopWall.CanCollide = false
+
+-- INVISBILEWALL
+local InvisibleWall = Instance.new("Part")
+InvisibleWall.Parent = workspace.Folder
+InvisibleWall.Anchored = true
+InvisibleWall.Size = Vector3.new(21, 14, 1)
+InvisibleWall.Orientation = Vector3.new(0, 90, 0)
+InvisibleWall.Position = Vector3.new(9.5, 7, -0.5)
+InvisibleWall.Transparency = 1
+InvisibleWall.CanCollide = false
+
+-- PROXIMITY PROMPT
+local ProximityPromptService = Instance.new("ProximityPrompt")
+ProximityPromptService.Parent = Button
+ProximityPromptService.HoldDuration = 1
+
+
+-- SOUNDS
+local EvilLaugh = workspace.Sounds["Evil Laugh"]
+local Impact = workspace.Sounds.Impact
+local Exsplosion = workspace.Sounds["Explosion Sound"]
+local WarpSound = workspace.Sounds["sonic warp"]
+
+-- DOOR THINGY FUNCTION
+local function PromptMe()
+	if ProximityPromptService.PromptButtonHoldBegan then
+		wait(1.0)
+		EvilLaugh:Play()
+		ProximityPromptService.Enabled = false
+		Button.Transparency = 1
+		wait(4.075)
+		Impact:Play()
+		InvisibleWall.Transparency = 0
+		InvisibleWall.CanCollide = true
+		TopWall.Transparency = 0
+		TopWall.CanCollide = true
+		TopWall.Color = Black
+		Baseplate.Material = Neon
+		Baseplate.Color = Red
+		MiddlePart.Color = Black
+		InvisibleWall.Color = Black
+		LeftWall.Color = Black
+		RightWall.Color = Black
+	end
+end
+ProximityPromptService.PromptButtonHoldBegan:Connect(PromptMe)
+
+local function OnTouch(otherpart)
+	local Character = otherpart.Parent
+	local Humanoid = Character:FindFirstChildWhichIsA("Humanoid")
+	if Baseplate.Color == Red then
+		Humanoid.Health = 0
+		wait(2.0)
+		InvisibleWall.Transparency = 1
+		InvisibleWall.CanCollide = false
+		TopWall.Transparency = 1
+		TopWall.CanCollide = false
+		TopWall.Color = NormalColor
+		Baseplate.Color = BaseplateColor
+		Baseplate.Material = Enum.Material.Plastic
+		InvisibleWall.Color = NormalColor
+		LeftWall.Color = NormalColor
+		RightWall.Color = NormalColor
+		MiddlePart.Color = NormalColor
+		wait(2.0)
+		ProximityPromptService.Enabled = true
+		
+	
+	end
+end
+
+Baseplate.Touched:Connect(OnTouch)
+
+
